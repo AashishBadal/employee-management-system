@@ -1,0 +1,138 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Nexus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <div class="login-overlay" id="loginContainer">
+        <div class="login-card">
+            <h2><span class="material-icons">login</span> Employee Nexus</h2>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Username" class="input-field">
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Password" class="input-field">
+                    <span class="material-icons toggle-password" onclick="togglePassword('password')">visibility</span>
+                </div>
+                <button onclick="login()" class="btn-primary">Access System</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager Dashboard -->
+    <div class="dashboard" id="managerView" style="display: none;">
+        <aside class="sidebar">
+            <h3>Manager Hub</h3>
+            <nav>
+                <button onclick="showSection('team')" class="nav-btn active"><span class="material-icons">group</span> Team</button>
+                <button onclick="showSection('tasks')" class="nav-btn"><span class="material-icons">assignment</span> Tasks</button>
+                <button onclick="showSection('analytics')" class="nav-btn"><span class="material-icons">bar_chart</span> Analytics</button>
+                <button onclick="toggleTheme()" class="nav-btn"><span class="material-icons">brightness_6</span> Theme</button>
+                <button onclick="logout()" class="nav-btn logout"><span class="material-icons">logout</span> Logout</button>
+            </nav>
+        </aside>
+
+        <main>
+            <section id="team" class="content-section">
+                <h2>Create Team Member</h2>
+                <div class="card animated">
+                    <div class="form-group">
+                        <input type="text" id="newUsername" placeholder="Username" class="input-field">
+                        <div class="password-container">
+                            <input type="password" id="newPassword" placeholder="Password" class="input-field">
+                            <span class="material-icons toggle-password" onclick="togglePassword('newPassword')">visibility</span>
+                        </div>
+                        <input type="text" id="empName" placeholder="Full Name" class="input-field">
+                        <input type="email" id="empEmail" placeholder="Email" class="input-field">
+                        <select id="empRole" class="input-field">
+                            <option value="developer">Developer</option>
+                            <option value="designer">Designer</option>
+                            <option value="qa">QA</option>
+                        </select>
+                        <button onclick="createEmployee()" class="btn-primary">Add Member</button>
+                    </div>
+                </div>
+                <div class="card animated">
+                    <h3>Team Overview</h3>
+                    <div id="teamOverview" class="team-list"></div>
+                </div>
+                <div class="card animated">
+                    <h3>Manage Categories</h3>
+                    <div class="form-group">
+                        <input type="text" id="newCategory" placeholder="New Category" class="input-field">
+                        <button onclick="addCategory()" class="btn-primary">Add</button>
+                    </div>
+                    <ul id="categoryList" class="category-list"></ul>
+                </div>
+            </section>
+
+            <section id="tasks" class="content-section" style="display: none;">
+                <h2>Task Management</h2>
+                <div class="filters">
+                    <input type="text" id="taskSearch" placeholder="Search Tasks..." class="input-field" oninput="updateViews()">
+                    <select id="filterStatus" onchange="updateViews()" class="input-field">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <select id="filterPriority" onchange="updateViews()" class="input-field">
+                        <option value="all">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <select id="filterCategory" onchange="updateViews()" class="input-field"></select>
+                </div>
+                <div class="card animated" id="taskForm">
+                    <div class="form-group">
+                        <select id="employeeSelect" class="input-field"></select>
+                        <input type="text" id="taskDesc" placeholder="Task Description" class="input-field">
+                        <input type="date" id="taskDeadline" class="input-field">
+                        <select id="taskPriority" class="input-field">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                        <select id="taskCategory" class="input-field"></select>
+                        <button onclick="assignTask()" class="btn-primary">Assign Task</button>
+                    </div>
+                </div>
+                <div id="managerTaskList" class="task-grid"></div>
+            </section>
+
+            <section id="analytics" class="content-section" style="display: none;">
+                <h2>Team Analytics</h2>
+                <div id="analyticsView" class="analytics-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Employee Dashboard -->
+    <div class="dashboard employee" id="employeeView" style="display: none;">
+        <header>
+            <h2><span class="material-icons">person</span> Welcome, <span id="employeeName"></span></h2>
+            <div>
+                <button onclick="toggleTheme()" class="btn-primary"><span class="material-icons">brightness_6</span> Theme</button>
+                <button onclick="showProfile()" class="btn-primary"><span class="material-icons">account_circle</span> Profile</button>
+                <button onclick="logout()" class="btn-danger"><span class="material-icons">logout</span> Logout</button>
+            </div>
+        </header>
+        <div id="profileView" class="card animated" style="display: none;"></div>
+        <div class="filters">
+            <input type="text" id="empTaskSearch" placeholder="Search Tasks..." class="input-field" oninput="updateViews()">
+            <select id="empFilterStatus" onchange="updateViews()" class="input-field">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+        <div id="employeeTaskList" class="task-grid"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
